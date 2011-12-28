@@ -299,7 +299,10 @@
             <xsl:call-template name="mods"/>
             <!--only call this if the mods stream exists-->
         </xsl:for-each>
-
+        
+        <!-- call the tei template -->
+        <xsl:call-template name="TEI"/>
+        
         <!-- Transformation of pbcore for islandvoices.ca     -->
         <xsl:for-each
             select="foxml:datastream[@ID='PBCORE']/foxml:datastreamVersion[last()]/foxml:xmlContent//pb:pbcoreDescription[1]" >
@@ -799,5 +802,45 @@
 
 
     </xsl:template>
+    
+  <xsl:template name="TEI">
+    <xsl:variable name="PROT" >http</xsl:variable>
+    <xsl:variable name="FEDORAUSERNAME">anonymous</xsl:variable>
+    <xsl:variable name="FEDORAPASSWORD">anonymous</xsl:variable>
+    <xsl:variable name="HOST">dora-dev.hpc.hamilton.edu</xsl:variable>
+    <xsl:variable name="PORT">8080</xsl:variable>
+    <xsl:variable name="TEI" select="document(concat($PROT, '://', $FEDORAUSERNAME, ':', $FEDORAPASSWORD, '@', $HOST, ':', $PORT, '/fedora/objects/', $PID, '/datastreams/', 'TEI', '/content'))"/>
+    
+    <!-- surname -->
+    <xsl:for-each select="$TEI//tei:surname[text()]">
+        <field>
+          <xsl:attribute name="name">
+            <xsl:value-of select="concat('tei_', 'surname_s')"/>
+            </xsl:attribute>
+            <xsl:value-of select="normalize-space(text())"/>
+        </field>
+    </xsl:for-each>
+        
+    <!-- place name -->
+    <xsl:for-each select="$TEI//tei:placeName/*[text()]">
+        <field>
+          <xsl:attribute name="name">
+            <xsl:value-of select="concat('tei_', 'placeName_s')"/>
+          </xsl:attribute>
+            <xsl:value-of select="normalize-space(text())"/>
+        </field>
+    </xsl:for-each>
+    
+    
+    <!-- organization name -->
+    <xsl:for-each select="$TEI//tei:orgName[text()]">
+      <field>
+        <xsl:attribute name="name">
+          <xsl:value-of select="concat('tei_', 'orgName_s')"/>
+        </xsl:attribute>
+        <xsl:value-of select="normalize-space(text())"/>
+      </field>
+    </xsl:for-each>       
+  
+  </xsl:template>
 </xsl:stylesheet>
-
