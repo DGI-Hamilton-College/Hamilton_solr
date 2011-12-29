@@ -366,6 +366,27 @@
     <!-- default values for query parameters -->
      <lst name="defaults">
        <str name="echoParams">explicit</str>
+          <str name="fl">*</str>
+              <str name="q.alt">*:*</str>
+                    <str name="qf">
+                            mods.title^3.0 tei_orgName_t^2.0 tei_surname_t^2.0 tei_placeName_t^2.0 PID^1.0
+                                  </str>
+       <!-- 
+       <int name="rows">10</int>
+       <str name="fl">*</str>
+       <str name="version">2.2</str>
+        -->
+     </lst>
+  </requestHandler>
+  <requestHandler name="Hamilton_first" class="solr.SearchHandler">
+    <!-- default values for query parameters -->
+     <lst name="defaults">
+       <str name="echoParams">explicit</str>
+          <str name="fl">*</str>
+              <str name="q.alt">*:*</str>
+                    <str name="qf">
+                            mods.title^3.0 tei_orgName_t^2.0 tei_surname_t^2.0 tei_placeName_t^2.0 PID^1.0
+                                  </str>
        <!-- 
        <int name="rows">10</int>
        <str name="fl">*</str>

@@ -495,13 +495,20 @@
 
         <dynamicField name="dc*" type="text" indexed="true" stored="true" multiValued="true"/>
         <dynamicField name="mods*" type="text" indexed="true" stored="true" multiValued="true"/>
-
-
+        
+        <!-- dynamic non stored text field -->
+        <dynamicField name="*_t" type="text" indexed="true" stored="false" multiValued="true"/>
+        <!-- dynamic string field -->
+        <dynamicField name="*_s" type="string" indexed="true" stored="true" multiValued="true"/>
+        
         <dynamicField name="*" type="text" indexed="true" stored="true" multiValued="true"/>
         <!-- catch all for fields such as fgs.state etc.-->
 
     </fields>
 
+    
+    
+    
     <!-- Field to use to determine and enforce document uniqueness. 
       Unless this field is marked with required="false", it will be a required field
    -->
@@ -518,6 +525,6 @@
       A custom similarity may be specified here, but the default is fine
       for most applications.  -->
     <!-- <similarity class="org.apache.lucene.search.DefaultSimilarity"/> -->
-
+<copyField source="*_s" dest="*_t"/><!-- copy dynamic strings to text fields -->
 </schema>
 
