@@ -2,15 +2,13 @@
 <xsl:stylesheet version="1.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:exts="xalan://dk.defxws.fedoragsearch.server.GenericOperationsImpl"
-	xmlns:islandora-exts="xalan://ca.upei.roblib.DataStreamForXSLT"
 	exclude-result-prefixes="exts islandora-exts" xmlns:zs="http://www.loc.gov/zing/srw/"
 	xmlns:foxml="info:fedora/fedora-system:def/foxml#" xmlns:dc="http://purl.org/dc/elements/1.1/"
 	xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:tei="http://www.tei-c.org/ns/1.0"
 	xmlns:mods="http://www.loc.gov/mods/v3" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:fedora="info:fedora/fedora-system:def/relations-external#"
 	xmlns:rel="info:fedora/fedora-system:def/relations-external#"
-	xmlns:fractions="http://vre.upei.ca/fractions/" xmlns:compounds="http://vre.upei.ca/compounds/"
-	xmlns:critters="http://vre.upei.ca/critters/" xmlns:dwc="http://rs.tdwg.org/dwc/xsd/simpledarwincore/"
+	xmlns:dwc="http://rs.tdwg.org/dwc/xsd/simpledarwincore/"
 	xmlns:fedora-model="info:fedora/fedora-system:def/model#"
 	xmlns:uvalibdesc="http://dl.lib.virginia.edu/bin/dtd/descmeta/descmeta.dtd"
 	xmlns:pb="http://www.pbcore.org/PBCore/PBCoreNamespace.html"
@@ -137,28 +135,6 @@
 			text******************************************************************************** -->
 
 
-		<!--***************************************ILIVES***************************************************************************************************************** -->
-
-
-
-		<!-- field added for indexing only -->
-
-		<field>
-			<xsl:attribute name="name">
-                <xsl:value-of select="concat('mods.', 'indexTitle')" />
-            </xsl:attribute>
-			<xsl:value-of select="//mods:title" />
-		</field>
-
-		<xsl:variable name="pageCModel">
-			<xsl:text>info:fedora/ilives:pageCModel</xsl:text>
-		</xsl:variable>
-
-		<xsl:variable name="thisCModel">
-			<xsl:value-of select="//fedora-model:hasModel/@rdf:resource" />
-		</xsl:variable>
-		<xsl:value-of select="$thisCModel" />
-		
 		<!--********************************************Darwin Core********************************************************************** -->
 
 		<xsl:for-each
@@ -205,15 +181,22 @@
 
 		<!-- call the tei template -->
 		<xsl:call-template name="TEI" />
-		
+
 	</xsl:template>
-	
+
 	<xsl:template name="mods">
 		<xsl:variable name="MODS_STREAM"
-			select="islandora-exts:getXMLDatastreamASNodeList($PID, $REPOSITORYNAME, 'MODS', $FEDORASOAP, $FEDORAUSER, $FEDORAPASS, $TRUSTSTOREPATH, $TRUSTSTOREPASS)" />
+			select="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]/foxml:xmlContent" />
 
 		<!--***********************************************************MODS modified 
 			for maps********************************************************************************** -->
+		<field>
+			<xsl:attribute name="name">
+                <xsl:value-of select="concat('mods.', 'indexTitle')" />
+            </xsl:attribute>
+			<xsl:value-of select="$MODS_STREAM//mods:title" />
+		</field>
+
 		<xsl:for-each select="$MODS_STREAM//mods:title">
 			<xsl:if test="text() [normalize-space(.) ]">
 				<!--don't bother with empty space -->
@@ -606,7 +589,7 @@
 	</xsl:template>
 
 	<xsl:template name="TEI">
-	
+
 		<xsl:variable name="PROT">
 			http
 		</xsl:variable>
