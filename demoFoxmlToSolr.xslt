@@ -2,11 +2,11 @@
 <xsl:stylesheet version="1.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:exts="xalan://dk.defxws.fedoragsearch.server.GenericOperationsImpl"
-	exclude-result-prefixes="exts islandora-exts" xmlns:zs="http://www.loc.gov/zing/srw/"
-	xmlns:foxml="info:fedora/fedora-system:def/foxml#" xmlns:dc="http://purl.org/dc/elements/1.1/"
-	xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:tei="http://www.tei-c.org/ns/1.0"
-	xmlns:mods="http://www.loc.gov/mods/v3" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:fedora="info:fedora/fedora-system:def/relations-external#"
+	xmlns:zs="http://www.loc.gov/zing/srw/" xmlns:foxml="info:fedora/fedora-system:def/foxml#"
+	xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
+	xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:mods="http://www.loc.gov/mods/v3"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+	xmlns:fedora="info:fedora/fedora-system:def/relations-external#"
 	xmlns:rel="info:fedora/fedora-system:def/relations-external#"
 	xmlns:dwc="http://rs.tdwg.org/dwc/xsd/simpledarwincore/"
 	xmlns:fedora-model="info:fedora/fedora-system:def/model#"
@@ -68,7 +68,7 @@
 		<xsl:for-each
 			select="foxml:datastream/foxml:datastreamVersion[last()]/foxml:xmlContent/oai_dc:dc/*">
 			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
+				
 				<field>
 					<xsl:attribute name="name">
                         <xsl:value-of
@@ -140,7 +140,7 @@
 		<xsl:for-each
 			select="foxml:datastream/foxml:datastreamVersion[last()]/foxml:xmlContent/dwc:SimpleDarwinRecordSet/dwc:SimpleDarwinRecord/*">
 			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
+				
 				<field>
 					<xsl:attribute name="name">
                         <xsl:value-of
@@ -173,33 +173,27 @@
 
 		<!--*********************************** begin changes for Mods as a managed 
 			datastream users an islandor extension function used by MAPS, BOOKS etc******************************************************************************** -->
-		<xsl:for-each
-			select="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]">
-			<xsl:call-template name="mods" />
-			<!--only call this if the mods stream exists -->
-		</xsl:for-each>
+		<!-- call the tei template -->
+    <xsl:call-template name="MODS" />
 
 		<!-- call the tei template -->
-		<xsl:call-template name="TEI" />
+		<xsl:call-template name="tei" />
 
 	</xsl:template>
 
-	<xsl:template name="mods">
-		<xsl:variable name="MODS_STREAM"
-			select="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]/foxml:xmlContent" />
-
+	<xsl:template name="MODS">
 		<!--***********************************************************MODS modified 
 			for maps********************************************************************************** -->
 		<field>
 			<xsl:attribute name="name">
                 <xsl:value-of select="concat('mods.', 'indexTitle')" />
             </xsl:attribute>
-			<xsl:value-of select="$MODS_STREAM//mods:title" />
+			<xsl:value-of select="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]/foxml:xmlContent//mods:title" />
 		</field>
 
-		<xsl:for-each select="$MODS_STREAM//mods:title">
+		<xsl:for-each select="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]/foxml:xmlContent//mods:title">
 			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
+				
 				<field>
 					<xsl:attribute name="name">
                         <xsl:value-of select="concat('mods.', 'title')" />
@@ -211,9 +205,9 @@
 			</xsl:if>
 
 		</xsl:for-each>
-		<xsl:for-each select="$MODS_STREAM//mods:subTitle">
+		<xsl:for-each select="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]/foxml:xmlContent//mods:subTitle">
 			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
+				
 				<field>
 					<xsl:attribute name="name">
                         <xsl:value-of select="concat('mods.', 'subTitle')" />
@@ -223,9 +217,9 @@
 			</xsl:if>
 
 		</xsl:for-each>
-		<xsl:for-each select="$MODS_STREAM//mods:abstract">
+		<xsl:for-each select="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]/foxml:xmlContent//mods:abstract">
 			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
+				
 				<field>
 					<xsl:attribute name="name">
                         <xsl:value-of select="concat('mods.', name())" />
@@ -238,7 +232,7 @@
 		</xsl:for-each>
 		<!--test of optimized version don't call normalize-space twice in this 
 			one -->
-		<xsl:for-each select="$MODS_STREAM//mods:genre">
+		<xsl:for-each select="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]/foxml:xmlContent//mods:genre">
 			<xsl:variable name="textValue" select="normalize-space(text())" />
 			<xsl:if test="$textValue != ''">
 				<field>
@@ -251,9 +245,9 @@
 
 
 		</xsl:for-each>
-		<xsl:for-each select="$MODS_STREAM//mods:form">
+		<xsl:for-each select="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]/foxml:xmlContent//mods:form">
 			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
+				
 				<field>
 					<xsl:attribute name="name">
                         <xsl:value-of select="concat('mods.', name())" />
@@ -264,9 +258,9 @@
 
 
 		</xsl:for-each>
-		<xsl:for-each select="$MODS_STREAM//mods:roleTerm">
+		<xsl:for-each select="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]/foxml:xmlContent//mods:roleTerm">
 			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
+				
 				<field>
 					<xsl:attribute name="name">
                         <xsl:value-of select="concat('mods.', text())" />
@@ -278,9 +272,9 @@
 		</xsl:for-each>
 
 		<xsl:for-each
-			select="$MODS_STREAM//mods:note[@type='statement of responsibility']">
+			select="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]/foxml:xmlContent//mods:note[@type='statement of responsibility']">
 			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
+				
 				<field>
 					<xsl:attribute name="name">
                         <xsl:value-of select="concat('mods.', 'sor')" />
@@ -290,9 +284,9 @@
 			</xsl:if>
 
 		</xsl:for-each>
-		<xsl:for-each select="$MODS_STREAM//mods:note">
+		<xsl:for-each select="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]/foxml:xmlContent//mods:note">
 			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
+				
 				<field>
 					<xsl:attribute name="name">
                         <xsl:value-of select="concat('mods.', 'note')" />
@@ -303,9 +297,9 @@
 
 		</xsl:for-each>
 
-		<xsl:for-each select="$MODS_STREAM//mods:topic">
+		<xsl:for-each select="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]/foxml:xmlContent//mods:topic">
 			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
+				
 				<field>
 					<xsl:attribute name="name">
                         <xsl:value-of select="concat('mods.', 'topic')" />
@@ -316,9 +310,9 @@
 
 		</xsl:for-each>
 
-		<xsl:for-each select="$MODS_STREAM//mods:geographic">
+		<xsl:for-each select="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]/foxml:xmlContent//mods:geographic">
 			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
+				
 				<field>
 					<xsl:attribute name="name">
                         <xsl:value-of select="concat('mods.', 'geographic')" />
@@ -329,9 +323,9 @@
 
 		</xsl:for-each>
 
-		<xsl:for-each select="$MODS_STREAM//mods:caption">
+		<xsl:for-each select="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]/foxml:xmlContent//mods:caption">
 			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
+				
 				<field>
 					<xsl:attribute name="name">
                         <xsl:value-of select="concat('mods.', 'caption')" />
@@ -343,9 +337,9 @@
 		</xsl:for-each>
 
 
-		<xsl:for-each select="$MODS_STREAM//mods:subject/*">
+		<xsl:for-each select="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]/foxml:xmlContent//mods:subject/*">
 			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
+				
 				<field>
 					<xsl:attribute name="name">
                         <!--changed names to have each child element uniquely indexed-->
@@ -357,9 +351,9 @@
 
 		</xsl:for-each>
 
-		<xsl:for-each select="$MODS_STREAM//mods:extent">
+		<xsl:for-each select="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]/foxml:xmlContent//mods:extent">
 			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
+				
 				<field>
 					<xsl:attribute name="name">
                         <xsl:value-of select="concat('mods.', 'extent')" />
@@ -369,9 +363,9 @@
 			</xsl:if>
 		</xsl:for-each>
 
-		<xsl:for-each select="$MODS_STREAM//mods:accessCondition">
+		<xsl:for-each select="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]/foxml:xmlContent//mods:accessCondition">
 			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
+				
 				<field>
 					<xsl:attribute name="name">
                         <xsl:value-of
@@ -382,9 +376,9 @@
 			</xsl:if>
 		</xsl:for-each>
 
-		<xsl:for-each select="$MODS_STREAM//mods:country">
+		<xsl:for-each select="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]/foxml:xmlContent//mods:country">
 			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
+				
 				<field>
 					<xsl:attribute name="name">
                         <xsl:value-of select="concat('mods.', 'country')" />
@@ -393,9 +387,9 @@
 				</field>
 			</xsl:if>
 		</xsl:for-each>
-		<xsl:for-each select="$MODS_STREAM//mods:province">
+		<xsl:for-each select="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]/foxml:xmlContent//mods:province">
 			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
+				
 				<field>
 					<xsl:attribute name="name">
                         <xsl:value-of select="concat('mods.', 'province')" />
@@ -404,9 +398,9 @@
 				</field>
 			</xsl:if>
 		</xsl:for-each>
-		<xsl:for-each select="$MODS_STREAM//mods:county">
+		<xsl:for-each select="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]/foxml:xmlContent//mods:county">
 			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
+				
 				<field>
 					<xsl:attribute name="name">
                         <xsl:value-of select="concat('mods.', 'county')" />
@@ -415,9 +409,9 @@
 				</field>
 			</xsl:if>
 		</xsl:for-each>
-		<xsl:for-each select="$MODS_STREAM//mods:region">
+		<xsl:for-each select="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]/foxml:xmlContent//mods:region">
 			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
+				
 				<field>
 					<xsl:attribute name="name">
                         <xsl:value-of select="concat('mods.', 'region')" />
@@ -426,9 +420,9 @@
 				</field>
 			</xsl:if>
 		</xsl:for-each>
-		<xsl:for-each select="$MODS_STREAM//mods:city">
+		<xsl:for-each select="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]/foxml:xmlContent//mods:city">
 			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
+				
 				<field>
 					<xsl:attribute name="name">
                         <xsl:value-of select="concat('mods.', 'city')" />
@@ -437,9 +431,9 @@
 				</field>
 			</xsl:if>
 		</xsl:for-each>
-		<xsl:for-each select="$MODS_STREAM//mods:citySection">
+		<xsl:for-each select="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]/foxml:xmlContent//mods:citySection">
 			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
+				
 				<field>
 					<xsl:attribute name="name">
                         <xsl:value-of select="concat('mods.', 'citySection')" />
@@ -448,37 +442,10 @@
 				</field>
 			</xsl:if>
 		</xsl:for-each>
-		<xsl:for-each select="$MODS_STREAM//mods:subject/mods:name/mods:namePart/*">
-			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
-				<field>
-					<xsl:attribute name="name">
-                        <xsl:value-of select="concat('mods.', 'subject')" />
-                    </xsl:attribute>
-					<xsl:value-of select="normalize-space(text())" />
-				</field>
-			</xsl:if>
-
-		</xsl:for-each>
-
-
-		<xsl:for-each select="$MODS_STREAM//mods:physicalDescription/*">
-			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
-				<field>
-					<xsl:attribute name="name">
-                        <xsl:value-of select="concat('mods.', name())" />
-                    </xsl:attribute>
-					<xsl:value-of select="normalize-space(text())" />
-				</field>
-			</xsl:if>
-
-		</xsl:for-each>
-
 		<xsl:for-each
-			select="$MODS_STREAM//mods:originInfo//mods:placeTerm[@type='text']">
+			select="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]/foxml:xmlContent//mods:originInfo//mods:placeTerm[@type='text']">
 			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
+				
 				<field>
 					<xsl:attribute name="name">
                         <xsl:value-of
@@ -489,9 +456,9 @@
 			</xsl:if>
 		</xsl:for-each>
 
-		<xsl:for-each select="$MODS_STREAM//mods:originInfo/mods:publisher">
+		<xsl:for-each select="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]/foxml:xmlContent//mods:originInfo/mods:publisher">
 			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
+				
 				<field>
 					<xsl:attribute name="name">
                         <xsl:value-of select="concat('mods.', name())" />
@@ -501,9 +468,9 @@
 			</xsl:if>
 
 		</xsl:for-each>
-		<xsl:for-each select="$MODS_STREAM//mods:originInfo/mods:edition">
+		<xsl:for-each select="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]/foxml:xmlContent//mods:originInfo/mods:edition">
 			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
+				
 				<field>
 					<xsl:attribute name="name">
                         <xsl:value-of select="concat('mods.', name())" />
@@ -514,9 +481,9 @@
 
 		</xsl:for-each>
 
-		<xsl:for-each select="$MODS_STREAM//mods:originInfo/mods:dateIssued">
+		<xsl:for-each select="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]/foxml:xmlContent//mods:originInfo/mods:dateIssued">
 			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
+				
 				<field>
 					<xsl:attribute name="name">
                         <xsl:value-of select="concat('mods.', name())" />
@@ -526,9 +493,9 @@
 			</xsl:if>
 		</xsl:for-each>
 
-		<xsl:for-each select="$MODS_STREAM//mods:originInfo/mods:dateCreated">
+		<xsl:for-each select="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]/foxml:xmlContent//mods:originInfo/mods:dateCreated">
 			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
+				
 				<field>
 					<xsl:attribute name="name">
                         <xsl:value-of select="concat('mods.', name())" />
@@ -537,74 +504,15 @@
 				</field>
 			</xsl:if>
 		</xsl:for-each>
-
-		<xsl:for-each select="$MODS_STREAM//mods:originInfo/mods:issuance">
-			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
-				<field>
-					<xsl:attribute name="name">
-                        <xsl:value-of select="concat('mods.', name())" />
-                    </xsl:attribute>
-					<xsl:value-of select="normalize-space(text())" />
-				</field>
-			</xsl:if>
-
-		</xsl:for-each>
-		<xsl:for-each select="$MODS_STREAM//mods:physicalLocation">
-			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
-				<field>
-					<xsl:attribute name="name">
-                        <xsl:value-of select="concat('mods.', name())" />
-                    </xsl:attribute>
-					<xsl:value-of select="normalize-space(text())" />
-				</field>
-			</xsl:if>
-		</xsl:for-each>
-		<xsl:for-each select="$MODS_STREAM//mods:identifier">
-			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
-				<field>
-					<xsl:attribute name="name">
-                        <xsl:value-of select="concat('mods.', name())" />
-                    </xsl:attribute>
-					<xsl:value-of select="normalize-space(text())" />
-				</field>
-			</xsl:if>
-		</xsl:for-each>
-
-		<xsl:for-each
-			select="$MODS_STREAM//mods:detail[@type='page number']/mods:number">
-			<xsl:if test="text() [normalize-space(.) ]">
-				<!--don't bother with empty space -->
-				<field>
-					<xsl:attribute name="name">
-                        <xsl:value-of select="concat('mods.', 'pageNum')" />
-                    </xsl:attribute>
-					<xsl:value-of select="normalize-space(text())" />
-				</field>
-			</xsl:if>
-		</xsl:for-each>
-
 	</xsl:template>
 
-	<xsl:template name="TEI">
+	<xsl:template name="tei">
 
-		<xsl:variable name="PROT">
-			http
-		</xsl:variable>
-		<xsl:variable name="FEDORAUSERNAME">
-			fedoraAdmin
-		</xsl:variable>
-		<xsl:variable name="FEDORAPASSWORD">
-			anonymous
-		</xsl:variable>
-		<xsl:variable name="HOST">
-			dora.hpc.hamilton.edu
-		</xsl:variable>
-		<xsl:variable name="PORT">
-			8080
-		</xsl:variable>
+		<xsl:variable name="PROT">http</xsl:variable>
+		<xsl:variable name="FEDORAUSERNAME">fedoraAdmin</xsl:variable>
+		<xsl:variable name="FEDORAPASSWORD">nothingtoseeheremovealong</xsl:variable>
+		<xsl:variable name="HOST">dora.hpc.hamilton.edu</xsl:variable>
+		<xsl:variable name="PORT">8080</xsl:variable>
 		<xsl:variable name="TEI"
 			select="document(concat($PROT, '://', $FEDORAUSERNAME, ':', $FEDORAPASSWORD, '@', $HOST, ':', $PORT, '/fedora/objects/', $PID, '/datastreams/', 'TEI', '/content'))" />
 
