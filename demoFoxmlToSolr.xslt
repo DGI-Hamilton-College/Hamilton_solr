@@ -643,8 +643,8 @@
     <xsl:template name="tei">
 
         <xsl:variable name="PROT">http</xsl:variable>
-        <xsl:variable name="FEDORAUSERNAME">fedoraAdmin</xsl:variable>
-        <xsl:variable name="FEDORAPASSWORD">Fed0r%40%40dmin</xsl:variable>
+        <xsl:variable name="FEDORAUSERNAME">XXX</xsl:variable>
+        <xsl:variable name="FEDORAPASSWORD">XXX</xsl:variable>
         <xsl:variable name="HOST">dora.hpc.hamilton.edu</xsl:variable>
         <xsl:variable name="PORT">8080</xsl:variable>
         <xsl:variable name="TEI"
