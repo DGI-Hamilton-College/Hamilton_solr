@@ -364,10 +364,36 @@
         <field name="mods.subject" type="text" indexed="true" stored="false" multiValued="true"/>
         <field name="mods.subject_s" type="string" maxChars="300" indexed="true" stored="true"
             multiValued="true"/>
+        
+        <!-- hamilton added mods.language routine -->
+        <copyField source="mods.language" dest="mods.language_s" />
+        <field name="mods.language" type="text" indexed="true" stored="false" multiValued="true"/>
+        <field name="mods.language_s" type="string" maxChars="300" indexed="true" stored="true"
+            multiValued="true"/>
+        
+        <!-- hamilton added mods.languageTermText routine -->
+        <copyField source="mods.languageTermText" dest="mods.languageTermText_s" />
+        <field name="mods.languageTermText" type="text" indexed="true" stored="false" multiValued="true"/>
+        <field name="mods.languageTermText_s" type="string" maxChars="300" indexed="true" stored="true"
+            multiValued="true"/>
+        
+        <!-- hamilton added mods.subjectKeyword -->
+        <copyField source="mods.subjectKeyword" dest="mods.subjectKeyword_s" />
+        <field name="mods.subjectKeyword" type="text" indexed="true" stored="false" multiValued="true"/>
+        <field name="mods.subjectKeyword_s" type="string" maxChars="300" indexed="true" stored="true"
+            multiValued="true"/>
+        
         <copyField source="mods.genre" dest="mods.genre_s" />
         <field name="mods.genre" type="text" indexed="true" stored="false" multiValued="true"/>
         <field name="mods.genre_s" type="string" maxChars="300" indexed="true" stored="true"
             multiValued="true"/>
+        
+        <!-- hamilton added mods.genreLocal -->
+        <copyField source="mods.genreLocal" dest="mods.genreLocal_s" />
+        <field name="mods.genreLocal" type="text" indexed="true" stored="false" multiValued="true"/>
+        <field name="mods.genreLocal_s" type="string" maxChars="300" indexed="true" stored="true"
+            multiValued="true"/>
+
         <copyField source="mods.form" dest="mods.form_s" />
         <field name="mods.form" type="text" indexed="true" stored="false" multiValued="true"/>
         <field name="mods.form_s" type="string" maxChars="300" indexed="true" stored="true"
@@ -432,7 +458,7 @@
         <field name="mods.note" type="text" indexed="true" stored="false" multiValued="true"/>
         <field name="mods.note_s" type="string" indexed="true" stored="true" 
             multiValued="true"/>
-        <copyField source="mods.provice" dest="mods.province_s" />
+        <copyField source="mods.province" dest="mods.province_s" />
         <field name="mods.province" type="text" indexed="true" stored="false" multiValued="true"/>
         <field name="mods.province_s" type="string" indexed="true" stored="true" 
             multiValued="true"/>
